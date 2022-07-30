@@ -14,6 +14,12 @@ public interface ChildrenRepository extends JpaRepository<Child, Integer> {
             "(SELECT child_id FROM child_relative WHERE relative_email=:relative_email)", nativeQuery = true)
     List<Child> getAllChildrenOfRelative(@Param("relative_email") String relativeEmail);
 
+    @Query(value = "SELECT * FROM child WHERE group_id=:group_id", nativeQuery = true)
+    List<Child> getAllChildrenByGroup(@Param("group_id") Integer groupId);
+
     @Query(value = "SELECT educator_email FROM group_educator WHERE group_id=:group_id", nativeQuery = true)
     List<String> getAllChildEducatorsEmails(@Param("group_id") Integer groupId);
+
+    @Query(value = "SELECT relative_email FROM child_relative WHERE child_id=:child_id", nativeQuery = true)
+    List<String> getCertainChildRelativesEmail(@Param("child_id") Integer childId);
 }

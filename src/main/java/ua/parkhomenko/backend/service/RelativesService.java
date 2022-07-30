@@ -59,15 +59,35 @@ public class RelativesService {
         return alertMessagesRepository.getAllChildAlerts(child.getChildId());
     }
 
-    public AlertMessage getAlertMessage(Integer alertId) throws Exception {
+    public AlertMessage getAlertMessageByID(Integer alertId) throws Exception {
         AlertMessage alert = alertMessagesRepository.findById(alertId).get();
         if(alert == null) {
             throw new Exception("AlertMessage search try: " + alertId + " failed");
         }
         return alert;
     }
+    public Review getReviewById(Integer reviewId) throws Exception {
+        Review review = reviewsRepository.findById(reviewId).get();
+        if(review == null) {
+            throw new Exception("Review search try: " + reviewId + " failed");
+        }
+        return review;
+    }
 
     public List<Review> getAllReviewsForAlert(AlertMessage alert) {
         return reviewsRepository.getAllReviewsForAlert(alert.getAlertMessageId());
+    }
+
+    public Review createReview(AlertMessage alert, String message, String email) {
+        Review newReview = new Review();
+        newReview.setReviewMessage(message);
+        newReview.setRelativeEmail(email);
+        newReview.setAlertMessage(alert);
+        return reviewsRepository.save(newReview);
+    }
+
+    public Review updateMark(Review review, Integer mark) {
+        review.setMark(mark);
+        return reviewsRepository.save(review);
     }
 }

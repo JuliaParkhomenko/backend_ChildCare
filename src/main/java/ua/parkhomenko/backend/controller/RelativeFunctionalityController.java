@@ -2,10 +2,7 @@ package ua.parkhomenko.backend.controller;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ua.parkhomenko.backend.dto.ChildForRelativeDTO;
 import ua.parkhomenko.backend.model.AlertMessage;
 import ua.parkhomenko.backend.model.Child;
@@ -48,8 +45,20 @@ public class RelativeFunctionalityController {
 
     @GetMapping("/getAllReviewsForCertainAlert")
     public List<Review> getAllReviewsForCertainAlert(@RequestParam Integer alertId) throws Exception {
-        AlertMessage alert = relativesService.getAlertMessage(alertId);
+        AlertMessage alert = relativesService.getAlertMessageByID(alertId);
         List<Review> reviews = relativesService.getAllReviewsForAlert(alert);
         return reviews;
+    }
+
+    @PostMapping("/createReview")
+    public boolean createReview(@RequestParam Integer alertId, @RequestBody Review review) throws Exception {
+        AlertMessage alert = relativesService.getAlertMessageByID(alertId);
+        return relativesService.createReview(alert, review.getReviewMessage(), review.getRelativeEmail()) != null;
+    }
+
+    @GetMapping("/updateMark")
+    public boolean updateMark(@RequestParam Integer reviewId, @RequestParam Integer mark) throws Exception {
+        Review review = relativesService.getReviewById(reviewId);
+        return relativesService.updateMark(review, mark) != null;
     }
 }
